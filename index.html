@@ -1,0 +1,433 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>MY ACADEMIA｜マイアカデミア</title><link rel="icon" href="./icon.svg"><link rel="apple-touch-icon" href="./apple-touch-icon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#142c40"><meta name="apple-mobile-web-app-capable" content="yes"><style>
+*{box-sizing:border-box}body{margin:0;font:15px -apple-system,BlinkMacSystemFont,sans-serif;color:#263e43;background:#f4f6f4}button,input,textarea,select{font:inherit}button{cursor:pointer;border:1px solid #d6dfda;background:white;border-radius:12px;padding:11px 14px;color:inherit}button.primary{background:#237968;color:white;border-color:#237968}header{height:64px;display:flex;align-items:center;gap:10px;padding:10px 18px;background:#fff;border-bottom:1px solid #dde5df}h1{font-size:20px;margin:0}small{color:#6a7d77}.spacer{flex:1}#home{max-width:960px;margin:auto;padding:36px 20px}h2{font-size:28px}#templates,#maps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.card{text-align:left;padding:22px;background:white;border:1px solid #dce4dd;border-radius:18px}.card b{display:block;font-size:18px;margin-bottom:10px}.card p{color:#647870;margin:0;line-height:1.7}.tag{font-size:11px;letter-spacing:2px;color:#237968}.mapcard{display:flex;align-items:center;gap:10px;padding:16px;background:white;border-radius:14px}.mapcard button:first-child{flex:1;text-align:left;border:0}#editor{display:none}#canvas{height:calc(100dvh - 126px);width:100%;touch-action:none;background:radial-gradient(#cbd8cf 1px,transparent 1px);background-size:24px 24px}#bar{height:62px;display:flex;gap:7px;align-items:center;padding:8px 12px;background:white;overflow:auto}#bar button{white-space:nowrap;font-size:13px}svg text{user-select:none}.node{cursor:grab}.node rect{stroke:#c9d9d1;stroke-width:1.5}.node.selected rect{stroke:#237968;stroke-width:3}.edge{cursor:pointer}.edge .hit{stroke:transparent;stroke-width:22}.hint{position:fixed;bottom:78px;left:16px;font-size:12px;color:#657970;background:#ffffffd9;padding:8px 12px;border-radius:10px;pointer-events:none}dialog{border:0;border-radius:20px;padding:24px;width:min(440px,92vw);box-shadow:0 20px 80px #102d3340}dialog::backdrop{background:#15363366}label{display:block;margin:14px 0 5px}input,textarea,select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:9px}textarea{min-height:100px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}#results{max-height:240px;overflow:auto}#results button{display:block;width:100%;margin:6px 0;text-align:left}#photoPreview{max-width:100%;max-height:160px}#timeline{padding:24px;max-height:calc(100dvh - 126px);overflow:auto;display:none}.event{background:white;margin:12px auto;padding:16px;border-left:4px solid #237968;max-width:650px;border-radius:8px}@media(max-width:550px){header{padding:8px 10px}h1{font-size:17px}header button{padding:9px;font-size:12px}#home{padding-top:24px}h2{font-size:24px}#templates{grid-template-columns:1fr 1fr}.card{padding:16px}.card b{font-size:15px}.card p{font-size:12px}#bar{gap:5px}#bar button{padding:9px}}
+body{background:radial-gradient(ellipse at 100% 0%,#c6e3ed88,transparent 52%),linear-gradient(145deg,#eef3f8,#f3f7f6);color:#213b4b}header{background:linear-gradient(110deg,#10283b,#1d4355);color:#e7f5fa;border-bottom:1px solid #41687a;box-shadow:0 4px 18px #0d26351a}header small{color:#b9d1df}header button{background:#ffffff12;color:#e7f5fa;border-color:#ffffff35}header h1{display:flex;align-items:center;gap:9px}header h1:before{content:'';width:30px;height:30px;background:url('./icon.svg') center/contain;border-radius:7px;flex-shrink:0}#home{background-image:linear-gradient(#537b9310 1px,transparent 1px),linear-gradient(90deg,#537b9310 1px,transparent 1px);background-size:40px 40px;border-radius:0 0 28px 28px}.tag{color:#286d86}h2{letter-spacing:.03em}.card{background:linear-gradient(135deg,#ffffffed,#edf5f9e6);border:1px solid #baccd866;box-shadow:0 8px 22px #24445b09;border-top:3px solid #427a95}.card:nth-child(2n){border-top-color:#378e83}.card:nth-child(3n){border-top-color:#727ba5}.card p{color:#536d7a}.mapcard{background:#ffffffd9;border:1px solid #d3e0e7}#bar{background:#eaf0f6;border-bottom:1px solid #ccdce6}button.primary{background:#246c7e;border-color:#246c7e}#canvas{background-color:#edf3f8;background-image:radial-gradient(#5c839440 1px,transparent 1px),linear-gradient(135deg,#e8f0f7,#f1f7f6);background-size:24px 24px,100% 100%}.hint{color:#476377;background:#ffffffec;border:1px solid #d5e1e8}#timeline{background:linear-gradient(90deg,#e9f0f8,#f2f7f8)}.event{background:#ffffffeb;border-left-color:#427b92;box-shadow:0 4px 20px #24445b0a}.event small{color:#427b92}dialog{background:linear-gradient(140deg,#ffffff,#edf4f9);color:#213b4b;border:1px solid #c1d4e1}dialog::backdrop{background:#0c223b8c}input,textarea,select{background:#ffffffeb;border-color:#bfcfda}input:focus,textarea:focus,select:focus{outline:2px solid #5aa7b0;outline-offset:2px}@media(max-width:550px){header small{display:none}header h1{font-size:15px}header h1:before{width:26px;height:26px}}
+#editor{position:relative}#readPanel{position:absolute;z-index:5;top:70px;left:12px;right:12px;max-width:560px;margin:auto;background:linear-gradient(135deg,#fff,#edf4f9);border:1px solid #bacfdc;border-radius:14px;box-shadow:0 8px 28px #10283b22;color:#213b4b}#readPanel[hidden]{display:none}#readPanel summary{display:flex;align-items:center;gap:9px;cursor:pointer;padding:13px 15px;list-style:none;font-weight:600}#readPanel summary::-webkit-details-marker{display:none}#readPanel summary:before{content:'▸';color:#427b92}#readPanel[open] summary:before{content:'▾'}#readTitle{overflow-wrap:anywhere;flex:1}#readBody{padding:0 15px 15px;max-height:min(42dvh,380px);overflow:auto;-webkit-overflow-scrolling:touch}#readBody p{margin:8px 0;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}#readMeta{font-size:12px;color:#587488}#readLink{display:block;padding:10px 12px;border:1px solid #b7d3dd;border-radius:9px;color:#1c6179;background:#eaf6fa;text-decoration:none;overflow-wrap:anywhere;line-height:1.6;margin:12px 0}#readPhoto{display:block;max-width:100%;max-height:260px;object-fit:contain;margin:12px auto;border-radius:9px}#readPhoto[hidden],#readLink[hidden]{display:none}#readTools{display:flex;gap:8px;margin-top:12px}#readTools button{font-size:13px}#readPanel summary span:last-child{font-size:11px;font-weight:400;color:#587488;white-space:nowrap}
+</style><header><button id="back" hidden>‹ 一覧</button><h1>MY <span style="color:#2177b8">A</span>CADEM<span style="color:#c29136">I</span>A</h1><span class="spacer"></span><small id="status">自分の考えを、自分の配置で。</small><button id="backup">保存書出</button><button id="restore">復元</button><input type="file" id="import" accept="application/json" hidden></header>
+<main id="home"><span class="tag">YOUR CONNECTIONS, YOUR WAY</span><h2>何を整理しよう？</h2><p style="color:#647870;line-height:1.8">サンプルを書き換えて始められます。<br>位置も、順序も、つながりも、あとから自由に。</p><div id="templates"></div><h3 style="margin-top:32px">マイマップ</h3><div id="maps"></div><p><small>この端末のブラウザに自動保存。大切な記録は「保存書出」でバックアップしてください。</small></p></main>
+<section id="editor"><div id="bar"><button id="add" class="primary">＋ 項目</button><button id="edit">編集</button><button id="connect">つなぐ</button><button id="undo">↶</button><button id="redo">↷</button><button id="search">検索</button><button id="time">時系列</button><button id="fit">全体</button><button id="out">−</button><button id="in">＋</button><button id="print">PDF</button></div><details id="readPanel" hidden><summary><span id="readTitle"></span><span>内容を見る</span></summary><div id="readBody"><p id="readMeta"></p><p id="readNote"></p><a id="readLink" target="_blank" rel="noopener noreferrer" hidden></a><img id="readPhoto" hidden alt="登録した画像"><div id="readTools"><button id="studyNotebook" class="primary">📖 学習ノート</button><button id="readEdit">編集する</button><button id="readClose">閉じる</button></div></div></details><svg id="canvas"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#648b80"/></marker></defs><g id="world"></g></svg><div id="timeline"></div><div class="hint" id="hint">タップで内容を見る・ドラッグで移動／背景を動かして移動</div></section>
+<dialog id="nodeDialog"><h3>項目を編集</h3><label>名前</label><input id="titleInput"><label>種類</label><select id="kind"><option>項目</option><option>人物</option><option>出来事</option><option>財産</option><option>組織</option><option>技能</option><option>疑問</option></select><label>メモ</label><textarea id="note"></textarea><label>URL</label><input id="url" type="url" placeholder="https://"><button id="openUrl" style="margin-top:6px">登録したURLを開く</button><label>日付（時系列で使う・任意）</label><input id="date" type="date"><label>色</label><input id="color" type="color"><label>写真・画像</label><input id="photo" type="file" accept="image/*"><img id="photoPreview"><button id="removePhoto">画像を外す</button><div class="actions"><button id="deleteNode">削除</button><button onclick="nodeDialog.close()">取消</button><button id="saveNode" class="primary">保存</button></div></dialog>
+<dialog id="edgeDialog"><h3>つながりを編集</h3><label>接続元</label><select id="from"></select><label>接続先</label><select id="to"></select><label>関係名（任意）</label><input id="relation" placeholder="所属・親子・原因など"><label><input id="direction" type="checkbox" style="width:auto"> 方向を矢印で表示</label><div class="actions"><button id="deleteEdge">線を外す</button><button onclick="edgeDialog.close()">取消</button><button id="saveEdge" class="primary">保存</button></div></dialog>
+<dialog id="searchDialog"><h3>必要な情報を探す</h3><input id="query" placeholder="名前・メモ・種類を検索"><div id="results"></div><div class="actions"><button onclick="searchDialog.close()">閉じる</button></div></dialog><script>
+const $=id=>document.getElementById(id), uid=()=>crypto.randomUUID(), clone=x=>JSON.parse(JSON.stringify(x));
+let db;try{db=JSON.parse(localStorage.getItem('my-academia-v1'))||{maps:[]}}catch{db={maps:[]}}let map=null,selected=null,history=[],future=[],view={x:0,y:0,s:1},linkStart=null,nodeEdit=null,edgeEdit=null,photoData='',timeline=false;
+const presets=[['構造・仕組み','全体と要素、その役割を記録','全体','構成要素A','構成要素B','役割'],['人間関係','人物と関係を、自分の言葉で','自分','家族','友人','仕事仲間'],['時系列','出来事と日付、前後の流れ','テーマ','最初の出来事','次の出来事','転機'],['相続情報','家族・財産・書類・手続き','相続情報','家族','財産','手続き'],['学歴・職歴','経験と技能、人生の転機','自分の経歴','学校','会社','身につけた技能'],['自由に作る','白紙から、自由につなぐ','中心の考え']];
+function persist(){try{localStorage.setItem('my-academia-v1',JSON.stringify(db));$('status').textContent='端末に保存済み'}catch{$('status').textContent='保存失敗：保存書出で退避してください';alert('端末への保存に失敗しました。保存書出でバックアップしてください。')}}
+function checkpoint(){history.push(clone(map));if(history.length>60)history.shift();future=[]}
+function commit(){map.updated=Date.now();persist();draw()}
+function home(){hideRead();map=null;syncBackupLabels();$('home').style.display='block';$('editor').style.display='none';$('back').hidden=true;$('status').textContent='自分の考えを、自分の配置で。';$('maps').replaceChildren();db.maps.forEach(m=>{let d=document.createElement('div');d.className='mapcard';let b=document.createElement('button');b.textContent=m.name+'　'+m.nodes.length+'項目';b.onclick=()=>openMap(m);let del=document.createElement('button');del.textContent='削除';del.onclick=()=>{if(confirm('このマップを削除しますか？バックアップは保存書出から作れます。')){db.maps=db.maps.filter(x=>x.id!==m.id);persist();home()}};d.append(b,del);$('maps').append(d)})}
+presets.forEach((p,i)=>{let b=document.createElement('button');b.className='card';let title=document.createElement('b');title.textContent=p[0];let desc=document.createElement('p');desc.textContent=p[1];b.append(title,desc);b.onclick=()=>{let name=prompt('マップの名前',p[0]);if(!name)return;let ns=p.slice(2).map((t,j)=>({id:uid(),title:t,note:j===0?'名前や内容を編集して、自分の記録に変えてください。':'',kind:'項目',url:'',date:'',color:j===0?'#d1ede2':'#ffffff',x:[0,-190,190,0][j],y:[0,150,150,300][j]}));let m={id:uid(),name,nodes:ns,edges:ns.slice(1).map(n=>({id:uid(),from:ns[0].id,to:n.id,label:'',directed:false})),updated:Date.now()};db.maps.push(m);persist();openMap(m)};$('templates').append(b)});
+function openMap(m){hideRead();map=m;syncBackupLabels();selected=null;history=[];future=[];linkStart=null;timeline=false;$('home').style.display='none';$('editor').style.display='block';$('back').hidden=false;$('timeline').style.display='none';$('canvas').style.display='block';$('hint').style.display='block';$('time').textContent='時系列';$('status').textContent='端末に保存済み';requestAnimationFrame(fit)}
+function svg(tag,attrs={},txt){let e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(let k in attrs)e.setAttribute(k,attrs[k]);if(txt!==undefined)e.textContent=txt;return e}
+function draw(){if(!map)return;let w=$('world');w.replaceChildren();w.setAttribute('transform',`translate(${view.x} ${view.y}) scale(${view.s})`);map.edges.forEach(e=>{let a=map.nodes.find(n=>n.id===e.from),b=map.nodes.find(n=>n.id===e.to);if(!a||!b)return;let g=svg('g',{class:'edge'}),attrs={x1:a.x,y1:a.y,x2:b.x,y2:b.y};g.append(svg('line',{...attrs,class:'hit'}),svg('line',{...attrs,stroke:'#8aa89c','stroke-width':2,...(e.directed?{'marker-end':'url(#arrow)'}:{})}));if(e.label){let t=svg('text',{x:(a.x+b.x)/2,y:(a.y+b.y)/2-9,'text-anchor':'middle',fill:'#486b5f','font-size':12,'paint-order':'stroke',stroke:'#f4f6f4','stroke-width':5},e.label);g.append(t)}g.onclick=()=>editEdge(e);w.append(g)});map.nodes.forEach(n=>{let g=svg('g',{class:'node'+(selected===n.id?' selected':''),transform:`translate(${n.x} ${n.y})`,'data-id':n.id});g.append(svg('rect',{x:-76,y:-25,width:152,height:50,rx:12,fill:n.color||'#fff'}));g.append(svg('text',{'text-anchor':'middle',y:n.photo?-1:5,'font-size':14,fill:'#263e43'},n.title.length>11?n.title.slice(0,11)+'…':n.title));if(n.note||n.url||n.date||n.photo)g.append(svg('text',{'text-anchor':'middle',y:19,'font-size':9,fill:'#62786e'},[n.note?'メモ':'',n.url?'URL':'',n.date,n.photo?'画像':''].filter(Boolean).join(' · ')));g.ondblclick=()=>editNode(n);w.append(g)});$('undo').disabled=!history.length;$('redo').disabled=!future.length;if(timeline)renderTimeline();refreshRead()}
+function fit(){let c=$('canvas');let ns=map.nodes;if(!ns.length){view={x:c.clientWidth/2,y:c.clientHeight/2,s:1};draw();return}let xs=ns.map(n=>n.x),ys=ns.map(n=>n.y),minX=Math.min(...xs)-100,maxX=Math.max(...xs)+100,minY=Math.min(...ys)-70,maxY=Math.max(...ys)+70;let s=Math.min(1.2,(c.clientWidth-30)/(maxX-minX),(c.clientHeight-80)/(maxY-minY));view={s,x:c.clientWidth/2-(minX+maxX)/2*s,y:c.clientHeight/2-(minY+maxY)/2*s};draw()}
+function editNode(n){nodeEdit=n.id;photoData=n.photo||'';for(let [id,key] of [['titleInput','title'],['kind','kind'],['note','note'],['url','url'],['date','date'],['color','color']])$(id).value=n[key]|| (key==='color'?'#ffffff':'');$('photo').value='';$('photoPreview').src=photoData;$('photoPreview').hidden=!photoData;$('nodeDialog').showModal()}
+$('saveNode').onclick=()=>{if(!$('titleInput').value.trim())return;checkpoint();let n=map.nodes.find(n=>n.id===nodeEdit);for(let [id,key] of [['titleInput','title'],['kind','kind'],['note','note'],['url','url'],['date','date'],['color','color']])n[key]=$(id).value;n.photo=photoData;$('nodeDialog').close();commit()};$('removePhoto').onclick=()=>{photoData='';$('photoPreview').hidden=true};$('photo').onchange=async()=>{let f=$('photo').files[0];if(!f)return;let bmp=await createImageBitmap(f);let c=document.createElement('canvas'),s=Math.min(1,900/Math.max(bmp.width,bmp.height));c.width=bmp.width*s;c.height=bmp.height*s;c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);photoData=c.toDataURL('image/jpeg',.8);$('photoPreview').src=photoData;$('photoPreview').hidden=false};$('openUrl').onclick=()=>{try{let u=new URL($('url').value);if(['https:','http:'].includes(u.protocol))window.open(u.href,'_blank','noopener')}catch{alert('https:// から始まるURLを入力してください')}};
+$('deleteNode').onclick=()=>{if(!confirm('項目と添付情報を削除しますか？取り消しで戻せます。'))return;checkpoint();map.nodes=map.nodes.filter(n=>n.id!==nodeEdit);map.edges=map.edges.filter(e=>e.from!==nodeEdit&&e.to!==nodeEdit);selected=null;$('nodeDialog').close();commit()};
+function editEdge(e){edgeEdit=e?.id||null;for(let id of ['from','to']){$(id).replaceChildren();map.nodes.forEach(n=>{let o=document.createElement('option');o.value=n.id;o.textContent=n.title;$(id).append(o)})} $('from').value=e?.from||linkStart||selected||map.nodes[0]?.id;$('to').value=e?.to||map.nodes.find(n=>n.id!==$('from').value)?.id;$('relation').value=e?.label||'';$('direction').checked=e?.directed||false;$('deleteEdge').hidden=!e;$('edgeDialog').showModal()}
+$('saveEdge').onclick=()=>{if($('from').value===$('to').value){alert('別の項目を選んでください');return}checkpoint();let e=edgeEdit?map.edges.find(e=>e.id===edgeEdit):{id:uid()};Object.assign(e,{from:$('from').value,to:$('to').value,label:$('relation').value,directed:$('direction').checked});if(!edgeEdit)map.edges.push(e);linkStart=null;$('connect').textContent='つなぐ';$('edgeDialog').close();commit()};$('deleteEdge').onclick=()=>{checkpoint();map.edges=map.edges.filter(e=>e.id!==edgeEdit);$('edgeDialog').close();commit()};
+$('add').onclick=()=>{let title=prompt('新しい項目の名前');if(!title?.trim())return;checkpoint();let parent=map.nodes.find(n=>n.id===selected),n={id:uid(),title:title.trim(),note:'',kind:'項目',url:'',date:'',color:'#ffffff',x:parent?parent.x+190:($('canvas').clientWidth/2-view.x)/view.s,y:parent?parent.y+120:($('canvas').clientHeight/2-view.y)/view.s};map.nodes.push(n);if(parent)map.edges.push({id:uid(),from:parent.id,to:n.id,label:'',directed:false});selected=n.id;commit()};$('edit').onclick=()=>{let n=map.nodes.find(n=>n.id===selected);if(n)editNode(n);else alert('編集する項目をタップしてください')};$('connect').onclick=()=>{if(map.nodes.length<2)return alert('項目を2つ以上作ってください');editEdge(null)};
+function replaceSnapshot(s){let idx=db.maps.findIndex(m=>m.id===map.id);map=s;db.maps[idx]=map;selected=null;persist();draw()}
+$('undo').onclick=()=>{if(history.length){future.push(clone(map));replaceSnapshot(history.pop())}};$('redo').onclick=()=>{if(future.length){history.push(clone(map));replaceSnapshot(future.pop())}};
+let pointers=new Map(),drag=null,pinch=null;
+$('canvas').onpointerdown=e=>{if(e.target.closest('.edge'))return;$('canvas').setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){if(drag?.changed)commit();drag=null;let a=[...pointers.values()];pinch={d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),s:view.s};return}let id=e.target.closest('.node')?.getAttribute('data-id');drag={id,x:e.clientX,y:e.clientY,ox:view.x,oy:view.y,changed:false};if(id){selected=id;let n=map.nodes.find(n=>n.id===id);drag.nx=n.x;drag.ny=n.y;draw()}else{selected=null;hideRead();draw()}};
+$('canvas').onpointermove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2&&pinch){let a=[...pointers.values()],s=Math.max(.2,Math.min(3,pinch.s*Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)/pinch.d));zoom(s/view.s);return}if(!drag)return;let dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)<4)return;if(drag.id){if(!drag.changed)checkpoint();let n=map.nodes.find(n=>n.id===drag.id);n.x=drag.nx+dx/view.s;n.y=drag.ny+dy/view.s;drag.changed=true}else{view.x=drag.ox+dx;view.y=drag.oy+dy}draw()};
+function release(e){let tapped=drag?.id&&!drag.changed&&e.type==='pointerup'?map.nodes.find(n=>n.id===drag.id):null;pointers.delete(e.pointerId);if(drag?.changed)commit();drag=null;if(pointers.size<2)pinch=null;if(tapped)showRead(tapped)} $('canvas').onpointerup=release;$('canvas').onpointercancel=release;
+function zoom(f){let c=$('canvas'),s=Math.max(.2,Math.min(3,view.s*f)),cx=c.clientWidth/2,cy=c.clientHeight/2;view.x=cx-(cx-view.x)*s/view.s;view.y=cy-(cy-view.y)*s/view.s;view.s=s;draw()}$('canvas').onwheel=e=>{e.preventDefault();zoom(e.deltaY>0?.9:1.1)};$('in').onclick=()=>zoom(1.2);$('out').onclick=()=>zoom(1/1.2);$('fit').onclick=fit;$('back').onclick=home;
+$('search').onclick=()=>{$('query').value='';$('results').replaceChildren();$('searchDialog').showModal()};$('query').oninput=()=>{$('results').replaceChildren();let q=$('query').value.trim().toLowerCase();if(!q)return;map.nodes.filter(n=>[n.title,n.note,n.kind,n.url].join(' ').toLowerCase().includes(q)).forEach(n=>{let b=document.createElement('button');b.textContent=n.title;b.onclick=()=>{if(timeline)$('time').click();selected=n.id;view.x=$('canvas').clientWidth/2-n.x*view.s;view.y=$('canvas').clientHeight/2-n.y*view.s;draw();showRead(n);$('searchDialog').close()};$('results').append(b)})};
+function renderTimeline(){let t=$('timeline');t.replaceChildren();let intro=document.createElement('p');intro.textContent='自分で登録した日付順に表示。マップの位置やつながりは変わりません。';t.append(intro);let dated=map.nodes.filter(n=>n.date).slice().sort((a,b)=>a.date.localeCompare(b.date));let undated=map.nodes.filter(n=>!n.date);[...dated,...undated].forEach(n=>{let d=document.createElement('div');d.className='event';let s=document.createElement('small');s.textContent=n.date||'日付なし';let h=document.createElement('h3');h.textContent=n.title;let p=document.createElement('p');p.textContent=n.note;d.append(s,h,p);d.onclick=()=>{selected=n.id;showRead(n);};t.append(d)})}
+$('time').onclick=()=>{timeline=!timeline;$('canvas').style.display=timeline?'none':'block';$('timeline').style.display=timeline?'block':'none';$('hint').style.display=timeline?'none':'block';$('time').textContent=timeline?'マップへ':'時系列';draw()};
+function download(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),10000)}
+function syncBackupLabels(){$('backup').textContent=map?'このマップを書出':'全体バックアップ';$('restore').textContent='読み込み';}
+function backupStamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+'-'+p(d.getMinutes())+'-'+p(d.getSeconds());}
+const backupDialog=document.createElement('dialog');backupDialog.id='backupImportDialog';backupDialog.style.cssText='width:min(560px,94vw);max-height:85dvh;overflow:auto';document.body.append(backupDialog);
+let pendingBackup=null;
+function validBackup(d){
+ if(d?.format!=='tsunagari-v1'||!Array.isArray(d.maps)||!d.maps.length)return false;
+ return d.maps.every(m=>{
+  if(!m||typeof m.name!=='string'||!Array.isArray(m.nodes)||!Array.isArray(m.edges))return false;
+  const ids=new Set();
+  for(const n of m.nodes){if(!n||typeof n.id!=='string'||ids.has(n.id)||typeof n.title!=='string'||!Number.isFinite(n.x)||!Number.isFinite(n.y))return false;ids.add(n.id);}
+  return m.edges.every(e=>e&&typeof e.from==='string'&&typeof e.to==='string'&&ids.has(e.from)&&ids.has(e.to));
+ });
+}
+function exportBackup(){const maps=map?[map]:db.maps;const name=map?map.name.replace(/[\\/:*?"<>|]/g,'_').slice(0,70):'全マップ';download(new Blob([JSON.stringify({format:'tsunagari-v1',scope:map?'map':'all',exportedAt:new Date().toISOString(),maps},null,2)],{type:'application/json'}),'つながり_'+name+'_'+backupStamp()+'.json');}
+$('backup').onclick=exportBackup;
+$('restore').onclick=()=>$('import').click();
+function prepareBackupImport(d){
+ pendingBackup=clone(d);backupDialog.replaceChildren();
+ const h=document.createElement('h3');h.textContent='マップを読み込む';
+ const p=document.createElement('p');p.textContent='マップごとに「追加」「置き換え」「読み込まない」を選んでください。初期状態は追加です。名前が同じでも自動統合しません。';p.style.cssText='line-height:1.7;font-size:13px';
+ backupDialog.append(h,p);
+ d.maps.forEach((m,i)=>{
+  const lab=document.createElement('label');lab.textContent=(i+1)+'. '+m.name+'（'+m.nodes.length+'項目）';
+  const sel=document.createElement('select');sel.dataset.importIndex=i;
+  const option=(value,text)=>{const o=document.createElement('option');o.value=value;o.textContent=text;sel.append(o);};
+  option('new','別マップとして追加');option('skip','読み込まない');
+  db.maps.forEach((t,j)=>option('replace:'+j,'置き換え：'+t.name+'（'+t.nodes.length+'項目）'));
+  backupDialog.append(lab,sel);
+ });
+ const warn=document.createElement('p');warn.textContent='置き換えは、選んだマップの内容全体を入れ替えます。他のマップは残ります。実行前に全体バックアップを保存できます。';warn.style.cssText='line-height:1.7;font-size:13px;color:#76543b';backupDialog.append(warn);
+ const actions=document.createElement('div');actions.className='actions';actions.style.flexWrap='wrap';
+ const back=document.createElement('button');back.textContent='実行前の全体を保存';back.onclick=()=>download(new Blob([JSON.stringify({format:'tsunagari-v1',scope:'all',exportedAt:new Date().toISOString(),maps:db.maps},null,2)],{type:'application/json'}),'つながり_全マップ_読み込み前_'+backupStamp()+'.json');
+ const cancel=document.createElement('button');cancel.textContent='取消';cancel.onclick=()=>{pendingBackup=null;backupDialog.close();};
+ const go=document.createElement('button');go.textContent='選んだ方法で読み込む';go.className='primary';go.onclick=applyBackupImport;
+ actions.append(back,cancel,go);backupDialog.append(actions);backupDialog.showModal();
+}
+function planBackupImport(incoming,choices,existing){
+ const next=clone(existing),targets=new Set();let added=0,replaced=0;
+ incoming.forEach((m,i)=>{
+  const mode=choices[i];if(mode==='skip')return;
+  const item=clone(m);
+  if(mode==='new'){item.id=uid();item.name+='（読み込み）';next.push(item);added++;return;}
+  if(!/^replace:\d+$/.test(mode))throw Error('読み込み方法を選んでください。');
+  const index=Number(mode.slice(8));
+  if(!existing[index])throw Error('置き換え先が見つかりません。');
+  if(targets.has(index))throw Error('同じマップに複数の置き換えは指定できません。');
+  targets.add(index);item.id=existing[index].id;item.updated=Date.now();next[index]=item;replaced++;
+ });
+ return {maps:next,added,replaced};
+}
+function applyBackupImport(){
+ if(!pendingBackup)return;
+ try{
+  const choices=[...backupDialog.querySelectorAll('select')].map(s=>s.value);
+  const plan=planBackupImport(pendingBackup.maps,choices,db.maps);
+  if(!plan.added&&!plan.replaced)return alert('読み込むマップを選んでください。');
+  if(!confirm('追加 '+plan.added+'件／置き換え '+plan.replaced+'件で実行します。'+(plan.replaced?'置き換え先の内容は入れ替わります。':'')))return;
+  // Write first. On storage failure, leave current maps unchanged.
+  localStorage.setItem('my-academia-v1',JSON.stringify({...db,maps:plan.maps}));
+  db.maps=plan.maps;pendingBackup=null;backupDialog.close();home();
+  alert('追加 '+plan.added+'件／置き換え '+plan.replaced+'件が完了しました。');
+ }catch(e){alert('読み込みを実行できませんでした。現在の記録は変更していません。\n'+e.message);}
+}
+$('import').onchange=async()=>{try{const file=$('import').files[0];if(!file)return;const d=JSON.parse(await file.text());if(!validBackup(d))throw Error('対応するマップJSONではないか、項目・線の形式が不正です。');prepareBackupImport(d);}catch(e){alert('このファイルは読み込めません。\n'+e.message);}finally{$('import').value='';}};
+$('print').onclick=()=>{let win=window.open('','_blank');if(!win)return alert('ポップアップを許可してください');let doc=win.document;doc.title=map.name;let h=doc.createElement('h1');h.textContent=map.name;doc.body.append(h);let c=$('canvas').cloneNode(true);c.setAttribute('width','100%');c.setAttribute('height','700');let xs=map.nodes.map(n=>n.x),ys=map.nodes.map(n=>n.y);if(xs.length){let minx=Math.min(...xs)-100,miny=Math.min(...ys)-60;c.setAttribute('viewBox',`${minx} ${miny} ${Math.max(...xs)-minx+100} ${Math.max(...ys)-miny+60}`);c.querySelector('#world').removeAttribute('transform')}c.style.cssText='width:100%;height:700px';doc.body.append(c);map.nodes.forEach(n=>{let h=doc.createElement('h3'),p=doc.createElement('p');h.textContent=n.title;p.textContent=[n.date,n.note,n.url].filter(Boolean).join('\n');p.style.whiteSpace='pre-wrap';doc.body.append(h,p);if(n.photo){let im=doc.createElement('img');im.src=n.photo;im.style.maxWidth='200px';doc.body.append(im)}});setTimeout(()=>win.print(),500)};
+let readId=null;
+function hideRead(){readId=null;$('readPanel').hidden=true;$('readPanel').open=false;}
+function showRead(n){readId=n.id;refreshRead();$('readPanel').hidden=false;$('readPanel').open=true;}
+function refreshRead(){if(!readId||!map)return;let n=map.nodes.find(n=>n.id===readId);if(!n){hideRead();return;}$('readTitle').textContent=n.title;$('readMeta').textContent=[n.kind,n.date].filter(Boolean).join(' · ');$('readNote').textContent=n.note||'メモはまだありません。';let link=$('readLink');link.hidden=true;link.removeAttribute('href');if(n.url){try{let u=new URL(n.url);if(['https:','http:'].includes(u.protocol)){link.href=u.href;link.textContent='↗ '+n.url;link.hidden=false;}else{$('readNote').textContent+='\nURL：'+n.url;}}catch{$('readNote').textContent+='\nURL：'+n.url;}}let photo=$('readPhoto');photo.hidden=!n.photo;if(n.photo)photo.src=n.photo;else photo.removeAttribute('src');}
+$('readEdit').onclick=()=>{let n=map?.nodes.find(n=>n.id===readId);if(n)editNode(n);};
+$('readClose').onclick=hideRead;
+window.addEventListener('resize',()=>{if(map)draw()});home();
+</script>
+<script>
+/* つながりノート AI質問画像共有アドオン v1.0
+   index.html の既存コードは変更せず、末尾で読み込む。 */
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const button = document.createElement('button');
+  button.id = 'askAIImage';
+  button.type = 'button';
+  button.textContent = '📸 AIに質問';
+  button.style.cssText = 'background:#195c78;color:white;border-color:#195c78;flex:1;font-weight:700';
+  const tools = $('readTools');
+  if (!tools) return;
+  tools.style.flexWrap = 'wrap';
+  tools.appendChild(button);
+
+  const wrap = (ctx, text, maxWidth) => {
+    const out = [];
+    for (const para of String(text || '').split(/\r?\n/)) {
+      if (!para) { out.push(''); continue; }
+      let line = '';
+      for (const ch of Array.from(para)) {
+        if (ctx.measureText(line + ch).width > maxWidth && line) {
+          out.push(line); line = ch;
+        } else line += ch;
+      }
+      out.push(line);
+    }
+    return out;
+  };
+  const image = src => new Promise(resolve => {
+    if (!src || !/^data:image\//.test(src)) return resolve(null);
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+  const pngBlob = canvas => new Promise((resolve, reject) =>
+    canvas.toBlob(b => b ? resolve(b) : reject(new Error('画像生成に失敗しました')), 'image/png')
+  );
+  const saveFile = (file) => {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url; a.download = file.name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  };
+  const safeName = s => String(s || '項目').replace(/[\\/:*?"<>|]/g, '_').slice(0, 45);
+  const makeCard = async (node, currentMap) => {
+    const related = (currentMap.edges || []).filter(e => e.from === node.id || e.to === node.id)
+      .map(e => {
+        const otherId = e.from === node.id ? e.to : e.from;
+        const other = currentMap.nodes.find(n => n.id === otherId);
+        return other ? `・${other.title}${e.label ? '（' + e.label + '）' : ''}` : null;
+      }).filter(Boolean).slice(0, 12);
+    const W = 900, pad = 62, textW = W - pad * 2;
+    const cv = document.createElement('canvas');
+    const ctx = cv.getContext('2d');
+    const blocks = [];
+    const add = (text, size, color, weight = '400', gap = 8) => {
+      ctx.font = `${weight} ${size}px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif`;
+      const lines = wrap(ctx, text, textW);
+      blocks.push({lines, size, color, weight, gap});
+    };
+    add('つながりノート  /  AI学習カード', 22, '#4c7387', '600', 30);
+    add('マップ：' + currentMap.name, 25, '#355c70', '600', 22);
+    add(node.title, 39, '#142e42', '700', 22);
+    if (node.kind || node.date) add([node.kind, node.date].filter(Boolean).join('  ·  '), 21, '#557385', '400', 26);
+    add('【メモ】', 26, '#17647a', '700', 12);
+    add(node.note || 'メモはまだありません。', 25, '#243f4e', '400', 24);
+    if (related.length) {
+      add('【関連項目】', 26, '#17647a', '700', 12);
+      add(related.join('\n'), 23, '#243f4e', '400', 22);
+    }
+    if (node.url) {
+      add('【参考URL】', 26, '#17647a', '700', 10);
+      add(node.url, 20, '#315f8c', '400', 18);
+    }
+    const pic = await image(node.photo);
+    let picH = 0;
+    if (pic) picH = Math.min(440, Math.round(pic.height * Math.min(textW / pic.width, 440 / pic.height)));
+    const textH = blocks.reduce((h, b) => h + b.lines.length * (b.size * 1.55) + b.gap, 0);
+    cv.width = W; cv.height = Math.ceil(52 + textH + (pic ? picH + 38 : 0) + 85);
+    ctx.fillStyle = '#f4f8fb'; ctx.fillRect(0, 0, W, cv.height);
+    ctx.fillStyle = '#dcecf3'; ctx.fillRect(0, 0, W, 15);
+    let y = 62;
+    for (const b of blocks) {
+      ctx.font = `${b.weight} ${b.size}px -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif`;
+      ctx.fillStyle = b.color; ctx.textBaseline = 'top';
+      for (const line of b.lines) { ctx.fillText(line, pad, y); y += b.size * 1.55; }
+      y += b.gap;
+    }
+    if (pic) {
+      y += 5;
+      const drawW = Math.round(pic.width * picH / pic.height);
+      ctx.drawImage(pic, pad, y, drawW, picH);
+      y += picH + 25;
+    }
+    ctx.fillStyle = '#5b7b8a'; ctx.font = '19px -apple-system, sans-serif';
+    ctx.fillText('この内容について、わかりやすく説明してください。', pad, cv.height - 53);
+    return cv;
+  };
+  button.addEventListener('click', async () => {
+    if (button.disabled) return;
+    const currentMap = typeof map !== 'undefined' ? map : null;
+    const currentId = typeof readId !== 'undefined' ? readId : null;
+    const node = currentMap?.nodes?.find(n => n.id === currentId);
+    if (!node) { alert('質問したい項目を選んでください。'); return; }
+    button.disabled = true;
+    button.textContent = '画像を作成中…';
+    try {
+      const card = await makeCard(node, currentMap);
+      const blob = await pngBlob(card);
+      const file = new File([blob], `つながりノート_${safeName(node.title)}.png`, { type: 'image/png' });
+      if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+        try {
+          await navigator.share({ files: [file], title: `学習メモ：${node.title}` });
+          return;
+        } catch (e) {
+          if (e.name === 'AbortError') return;
+          // 共有できなかった場合は画像保存へフォールバック
+        }
+      }
+      saveFile(file);
+      alert('質問用画像を保存しました。ChatGPTで画像を添付して質問してください。');
+    } catch (e) {
+      alert('画像を作成できませんでした：' + e.message);
+    } finally {
+      button.disabled = false;
+      button.textContent = '📸 AIに質問';
+    }
+  });
+})();
+
+
+/* つながりノート：テキスト質問共有 v1.1（既存機能を変更しない） */
+(() => {
+  'use strict';
+  const tools = document.getElementById('readTools');
+  if (!tools) return;
+  tools.style.flexWrap = 'wrap';
+  const btn = document.createElement('button');
+  btn.id = 'askAIText';
+  btn.type = 'button';
+  btn.textContent = '📝 AIに質問（文章）';
+  btn.style.cssText = 'background:#206c66;color:#fff;border-color:#206c66;font-weight:700;flex:1 1 160px';
+  tools.appendChild(btn);
+
+  const dlg = document.createElement('dialog');
+  dlg.id = 'aiTextDialog';
+  dlg.style.cssText = 'width:min(540px,94vw);max-height:85dvh;overflow:auto';
+  const heading = document.createElement('h3');
+  heading.textContent = '📝 AIへの質問を作る';
+  const info = document.createElement('p');
+  info.style.cssText = 'font-size:13px;line-height:1.6;color:#526b78';
+  info.textContent = '質問の目的を選ぶと、マップのメモと関連項目を含む文章を作成します。内容は自由に修正できます。';
+  const lab = document.createElement('label'); lab.textContent = '質問の目的';
+  const sel = document.createElement('select');
+  const options = [
+    ['easy','📖 わかりやすく説明して'],
+    ['why','💡 なぜそうなるの？'],
+    ['example','🌍 身近な例で説明して'],
+    ['quiz','🧩 理解度を確認したい'],
+    ['deep','🔎 もう少し詳しく知りたい'],
+    ['free','✍️ 自由に質問する']
+  ];
+  options.forEach(([v,t]) => {const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o)});
+  const qlab = document.createElement('label');qlab.textContent = '質問文（編集できます）';
+  const qbox = document.createElement('textarea');qbox.style.cssText='min-height:105px';
+  const plab = document.createElement('label');plab.textContent='ChatGPTに渡す文章のプレビュー（編集できます）';
+  const preview = document.createElement('textarea');preview.style.cssText='min-height:230px;font-size:13px;line-height:1.55';
+  const status = document.createElement('p');status.style.cssText='font-size:12px;color:#456b77;line-height:1.6';
+  const actions = document.createElement('div');actions.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-top:12px';
+  const mk = (t,primary=false) => {const b=document.createElement('button');b.type='button';b.textContent=t;if(primary)b.className='primary';return b};
+  const share=mk('📤 TXTを共有'), copy=mk('📋 文章をコピー'), save=mk('⬇ TXTを保存'), open=mk('📋 コピーしてChatGPTアプリへ',true), close=mk('閉じる');
+  actions.append(share,copy,save,open,close);
+  dlg.append(heading,info,lab,sel,qlab,qbox,plab,preview,status,actions);
+  document.body.appendChild(dlg);
+
+  let ctx=null, automatic=false;
+  const prompts={
+    easy:'この項目について、初めて学ぶ人にもわかるように、順序立てて説明してください。難しい言葉はかみくだいてください。',
+    why:'この項目はなぜそうなるのですか？原因・仕組み・結果を区別して説明してください。',
+    example:'この項目を、身近な生活の例や具体例を使って説明してください。',
+    quiz:'この項目の理解を確かめる基本問題を1問ずつ出してください。私の回答を待ってから解説してください。',
+    deep:'この項目について、基本から一段深い内容まで、関連する概念とのつながりを含めて説明してください。',
+    free:''
+  };
+  const build=()=>{
+    if(!ctx)return '';
+    const {m,n}=ctx;
+    const related=(m.edges||[]).filter(e=>e.from===n.id||e.to===n.id).map(e=>{
+      const id=e.from===n.id?e.to:e.from;
+      const other=m.nodes.find(v=>v.id===id);
+      return other?'・'+other.title+(e.label?'（'+e.label+'）':''):null;
+    }).filter(Boolean);
+    return ['【つながりノート：AIへの質問】','マップ：'+m.name,'項目：'+n.title,
+      n.kind?'種類：'+n.kind:'',n.date?'日付：'+n.date:'',
+      '','【学習メモ】',n.note||'（メモなし）',
+      ...(related.length?['','【関連項目】',...related]:[]),
+      ...(n.url?['','【参考URL】',n.url]:[]),
+      ...(n.photo?['','【添付画像】','元の項目には画像が登録されています。画像自体はこのテキストに含まれません。']:[]),
+      '','【質問】',qbox.value.trim()||'この内容を説明してください。'].filter(Boolean).join('\n');
+  };
+  const update=()=>{if(!automatic)preview.value=build()};
+  btn.onclick=()=>{
+    const m=typeof map!=='undefined'?map:null;
+    const n=m?.nodes?.find(x=>x.id===readId);
+    if(!n)return alert('質問する項目を選んでください。');
+    ctx={m,n};sel.value='easy';qbox.value=prompts.easy;automatic=false;update();
+    status.textContent='おすすめ：『コピーしてChatGPTアプリへ』を押し、この会話に戻って貼り付けてください。アプリが開かない場合はホーム画面からChatGPTを開いてください。';
+    dlg.showModal();
+  };
+  sel.onchange=()=>{qbox.value=prompts[sel.value];automatic=false;update()};
+  qbox.oninput=()=>{automatic=false;update()};
+  preview.oninput=()=>{automatic=true};
+  const file=()=>new File([new Blob([preview.value],{type:'text/plain;charset=utf-8'})], 'つながりノート_質問.txt',{type:'text/plain'});
+  const download=()=>{const url=URL.createObjectURL(file());const a=document.createElement('a');a.href=url;a.download='つながりノート_質問.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)};
+  save.onclick=()=>{download();status.textContent='テキストファイルを保存しました。'};
+  copy.onclick=async()=>{try{await navigator.clipboard.writeText(preview.value);status.textContent='文章をコピーしました。ChatGPTの入力欄に貼り付けてください。'}catch(e){preview.focus();preview.select();status.textContent='自動コピーできませんでした。選択した文章を手動でコピーしてください。'}};
+  share.onclick=async()=>{
+    const f=file();
+    if(!navigator.share|| (navigator.canShare&&!navigator.canShare({files:[f]}))){status.textContent='このブラウザではTXTファイル共有ができません。「文章をコピー」を使ってください。';return}
+    try{await navigator.share({files:[f],title:'つながりノート：質問'});status.textContent='共有先を開きました。'}
+    catch(e){if(e.name!=='AbortError')status.textContent='共有できませんでした。「文章をコピー」を使ってください。'}
+  };
+  // Web版のゲスト画面へ飛ばさず、コピー後にアプリへの切り替えを試みる。
+  // chatgpt:// は端末・アプリ版によって動かない場合があるため、手動で開く案内も残す。
+  open.onclick=async()=>{
+    if(!preview.value.trim()){status.textContent='質問文を入力してください。';return;}
+    let copied=false;
+    try{await navigator.clipboard.writeText(preview.value);copied=true;}
+    catch(e){preview.focus();preview.select();status.textContent='自動コピーできませんでした。選択中の文章をコピーしてからChatGPTアプリを開いてください。';return;}
+    if(copied){
+      status.textContent='質問文をコピーしました。ChatGPTアプリが開いたら、この会話を選んで貼り付けてください。開かない場合はホーム画面からアプリを起動してください。';
+      // ブラウザへは移動しない。iOSがカスタムURLスキームを処理できればアプリが開く。
+      window.location.href='chatgpt://';
+    }
+  };
+  close.onclick=()=>dlg.close();
+})();
+
+</script>
+<script>
+function printMapBounds(nodes){
+ if(!nodes.length)return {x:-100,y:-60,w:200,h:120};
+ const xs=nodes.map(n=>n.x),ys=nodes.map(n=>n.y),x=Math.min(...xs)-100,y=Math.min(...ys)-60;
+ return {x,y,w:Math.max(...xs)-x+100,h:Math.max(...ys)-y+60};
+}
+function printMapTiles(bounds){
+ const positions=(min,size,span,overlap)=>{if(size<=span)return [min-(span-size)/2];const count=Math.ceil((size-span)/(span-overlap))+1,step=(size-span)/(count-1);return Array.from({length:count},(_,i)=>min+i*step);};
+ const xs=positions(bounds.x,bounds.w,680,180),ys=positions(bounds.y,bounds.h,850,120);
+ return ys.flatMap((y,row)=>xs.map((x,col)=>({x,y,w:680,h:850,row:row+1,col:col+1,rows:ys.length,cols:xs.length})));
+}
+$('print').onclick=async()=>{
+ if(!map)return;
+ const tiles=printMapTiles(printMapBounds(map.nodes));
+ if(!confirm('全体図1ページ＋拡大図'+tiles.length+'ページ＋現在と同じ文章部分を出力します。\n配置・線は変えません。実行しますか？'))return;
+ const win=window.open('','_blank');if(!win)return alert('ポップアップを許可してください');
+ const doc=win.document;doc.title=map.name;
+ const style=doc.createElement('style');
+ style.textContent='@page{size:A4 portrait;margin:10mm}body{margin:0;color:#263e43;font-family:-apple-system,BlinkMacSystemFont,sans-serif}.map-page{width:190mm;height:274mm;box-sizing:border-box;break-after:page;page-break-after:always;overflow:hidden}.map-page h2{margin:0 0 3mm;font-size:14px;line-height:1.5;overflow-wrap:anywhere}.legend{font-size:11px;color:#4d6978;margin:0 0 3mm}.map-page svg{display:block;width:190mm;height:237.5mm;background:white}.map-page svg text{font-family:-apple-system,BlinkMacSystemFont,sans-serif}.map-page .node rect{stroke:#a5bbb1;stroke-width:1.5}.print-controls{padding:12px;background:#edf4f8;margin-bottom:12px}.print-controls button{font-size:16px;padding:9px 14px}@media screen{body{background:#e7edf1}.map-page{background:white;margin:16px auto;box-shadow:0 4px 20px #0002}.notes{max-width:850px;background:white;margin:16px auto;padding:20px}}@media print{.print-controls{display:none}.notes{margin:0;padding:0}}';
+ doc.head.append(style);
+ const controls=doc.createElement('div');controls.className='print-controls';const button=doc.createElement('button');button.textContent='印刷・PDF保存';button.onclick=()=>win.print();const info=doc.createElement('p');info.textContent='全体図の後に拡大図が続きます。図はベクター形式です。自動で印刷画面が開かない場合はこのボタンを押してください。';controls.append(button,info);doc.body.append(controls);
+ const template=$('canvas').cloneNode(true);template.style.cssText='';template.removeAttribute('id');template.querySelector('#world').removeAttribute('transform');template.querySelectorAll('.selected').forEach(n=>n.classList.remove('selected'));
+ // Modify title labels only in the print copy, never in the original map.
+ template.querySelectorAll('.node').forEach(g=>{const n=map.nodes.find(n=>n.id===g.getAttribute('data-id'));if(!n)return;g.querySelectorAll('text').forEach(t=>t.remove());const chars=Array.from(n.title),chunks=[];for(let i=0;i<chars.length;i+=12)chunks.push(chars.slice(i,i+12).join(''));const size=Math.min(12,40/Math.max(1,chunks.length));chunks.forEach((line,i)=>g.append(svg('text',{'text-anchor':'middle',y:(i-(chunks.length-1)/2)*size+size*.35,'font-size':size,fill:'#263e43'},line)));});
+ const appendPage=(bounds,title,legend,index)=>{const section=doc.createElement('section');section.className='map-page';const h=doc.createElement('h2');h.textContent=title;const p=doc.createElement('p');p.className='legend';p.textContent=legend;const c=template.cloneNode(true);c.querySelectorAll('[id]').forEach(el=>{const old=el.id;el.id=old+'-print-'+index;c.querySelectorAll('[marker-end]').forEach(line=>{if(line.getAttribute('marker-end')==='url(#'+old+')')line.setAttribute('marker-end','url(#'+el.id+')');});});c.setAttribute('viewBox',[bounds.x,bounds.y,bounds.w,bounds.h].join(' '));c.setAttribute('preserveAspectRatio','xMidYMid meet');section.append(h,p,c);doc.body.append(section);};
+ appendPage(printMapBounds(map.nodes),map.name+'｜全体図','位置関係を確認するページ。文字は次の拡大図で読めます。',0);
+ tiles.forEach((tile,i)=>appendPage(tile,map.name+'｜拡大図 '+(i+1)+' / '+tiles.length,'上から'+tile.row+'行目・左から'+tile.col+'列目（全'+tile.rows+'行×'+tile.cols+'列）。隣のページと重なる範囲があります。',i+1));
+ const notes=doc.createElement('div');notes.className='notes';doc.body.append(notes);
+ // Same note content, ordering, images and sizing as the existing output.
+ map.nodes.forEach(n=>{let h=doc.createElement('h3'),p=doc.createElement('p');h.textContent=n.title;p.textContent=[n.date,n.note,n.url].filter(Boolean).join('\n');p.style.whiteSpace='pre-wrap';notes.append(h,p);if(n.photo){let im=doc.createElement('img');im.src=n.photo;im.style.maxWidth='200px';notes.append(im)}});
+ await Promise.all([...doc.images].map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;setTimeout(resolve,3000);})));if(doc.fonts?.ready)await doc.fonts.ready;setTimeout(()=>{if(!win.closed)win.print();},300);
+};
+</script>
+<script>
+/* A3 map PDF and unchanged A4 notes: paper orientation is selected by geometry. */
+function a3Tiles(bounds,orientation){
+ const portrait=orientation==='portrait',mmW=portrait?277:400,mmH=portrait?370:250;
+ const w=mmW*96/25.4,h=mmH*96/25.4;
+ const positions=(min,size,span,overlap)=>{if(size<=span)return [min-(span-size)/2];const count=Math.ceil((size-span)/(span-overlap))+1,step=(size-span)/(count-1);return Array.from({length:count},(_,i)=>min+i*step);};
+ const xs=positions(bounds.x,bounds.w,w,180),ys=positions(bounds.y,bounds.h,h,120);
+ const tiles=ys.flatMap((y,row)=>xs.map((x,col)=>({x,y,w,h,row:row+1,col:col+1,rows:ys.length,cols:xs.length})));
+ return {orientation,mmW,mmH,w,h,tiles,fit:Math.min(w/bounds.w,h/bounds.h)};
+}
+function chooseA3(bounds){const p=a3Tiles(bounds,'portrait'),l=a3Tiles(bounds,'landscape');return p.tiles.length!==l.tiles.length?(p.tiles.length<l.tiles.length?p:l):(p.fit>=l.fit?p:l);}
+const a3Dialog=document.createElement('dialog');a3Dialog.style.cssText='width:min(460px,94vw);max-height:85dvh;overflow:auto';
+const a3Heading=document.createElement('h3');a3Heading.textContent='PDF出力';
+const a3Info=document.createElement('p');a3Info.style.cssText='font-size:13px;line-height:1.7';
+const a3Select=document.createElement('select');[['auto','向きを自動で選ぶ'],['portrait','A3縦'],['landscape','A3横']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;a3Select.append(o);});
+const a3Count=document.createElement('p');a3Count.style.cssText='font-size:13px;line-height:1.7';
+const a3Actions=document.createElement('div');a3Actions.className='actions';a3Actions.style.flexWrap='wrap';
+const a3MapButton=document.createElement('button');a3MapButton.textContent='A3マップを出力';a3MapButton.className='primary';
+const a4TextButton=document.createElement('button');a4TextButton.textContent='A4文章を出力';
+const a3Close=document.createElement('button');a3Close.textContent='閉じる';a3Close.onclick=()=>a3Dialog.close();
+a3Actions.append(a3MapButton,a4TextButton,a3Close);a3Dialog.append(a3Heading,a3Info,a3Select,a3Count,a3Actions);document.body.append(a3Dialog);
+let a3Snapshot=null;
+function selectedA3(){const b=printMapBounds(a3Snapshot.nodes);return a3Select.value==='auto'?chooseA3(b):a3Tiles(b,a3Select.value);}
+function updateA3Info(){const b=printMapBounds(a3Snapshot.nodes),p=a3Tiles(b,'portrait'),l=a3Tiles(b,'landscape'),chosen=selectedA3();a3Count.textContent='縦なら拡大図'+p.tiles.length+'ページ／横なら'+l.tiles.length+'ページ。選択：A3'+(chosen.orientation==='portrait'?'縦':'横')+'（全体図1＋拡大図'+chosen.tiles.length+'ページ）。';}
+a3Select.onchange=updateA3Info;
+$('print').onclick=()=>{if(!map)return;a3Snapshot=clone(map);a3Select.value='auto';a3Info.textContent='マップはA3、文章はA4で別々に保存します。自動は、同じ拡大率でページ数が少ない向きを選び、同数なら全体図を大きく載せられる向きを選びます。';updateA3Info();a3Dialog.showModal();};
+function pdfWindow(name,paper){const win=window.open('','_blank');if(!win){alert('ポップアップを許可してください');return null;}const doc=win.document;doc.title=name;const style=doc.createElement('style');style.textContent='@page{size:'+paper+';margin:10mm}body{margin:0;color:#263e43;font-family:-apple-system,BlinkMacSystemFont,sans-serif}.controls{padding:12px;background:#eaf2f7}.controls button{padding:10px;font-size:16px}.map-page{box-sizing:border-box;break-after:page;page-break-after:always;overflow:hidden}.map-page:last-child{break-after:auto;page-break-after:auto}.map-page h2{font-size:14px;line-height:1.4;margin:0 0 3mm;overflow-wrap:anywhere}.legend{font-size:11px;margin:0 0 3mm;color:#4d6978}.map-page svg{display:block;background:white}.map-page .node rect{stroke:#a5bbb1;stroke-width:1.5}.map-page svg text{font-family:-apple-system,BlinkMacSystemFont,sans-serif}@media screen{body{background:#e7edf1}.map-page{background:white;margin:16px auto;box-shadow:0 4px 20px #0002}.notes{background:white;max-width:850px;padding:20px;margin:16px auto}}@media print{.controls{display:none}.notes{padding:0;margin:0}}';doc.head.append(style);const controls=doc.createElement('div');controls.className='controls';const btn=doc.createElement('button');btn.textContent='印刷・PDF保存';btn.onclick=()=>win.print();const tip=doc.createElement('p');tip.textContent='用紙設定：'+paper+'。印刷画面が開かない場合はボタンを押してください。印刷プレビューで用紙サイズも確認してください。';controls.append(btn,tip);doc.body.append(controls);return win;}
+async function printWhenReady(win){await Promise.all([...win.document.images].map(im=>im.complete?Promise.resolve():new Promise(resolve=>{im.onload=resolve;im.onerror=resolve;setTimeout(resolve,3000);})));if(win.document.fonts?.ready)await win.document.fonts.ready;setTimeout(()=>{if(!win.closed)win.print();},300);}
+a3MapButton.onclick=()=>{
+ if(!a3Snapshot)return;const layout=selectedA3(),snapshot=a3Snapshot;
+ const win=pdfWindow(snapshot.name+'｜A3マップ','A3 '+layout.orientation);if(!win)return;const doc=win.document;
+ const template=$('canvas').cloneNode(true);template.style.cssText='';template.removeAttribute('id');template.querySelector('#world').removeAttribute('transform');template.querySelectorAll('.selected').forEach(g=>g.classList.remove('selected'));
+ template.querySelectorAll('.node').forEach(g=>{const n=snapshot.nodes.find(n=>n.id===g.getAttribute('data-id'));if(!n)return;g.querySelectorAll('text').forEach(t=>t.remove());const chars=Array.from(n.title),chunks=[];for(let i=0;i<chars.length;i+=12)chunks.push(chars.slice(i,i+12).join(''));const size=Math.min(12,40/Math.max(1,chunks.length));chunks.forEach((line,i)=>g.append(svg('text',{'text-anchor':'middle',y:(i-(chunks.length-1)/2)*size+size*.35,'font-size':size,fill:'#263e43'},line)));});
+ const page=(bounds,title,legend,index)=>{const section=doc.createElement('section');section.className='map-page';section.style.width=layout.mmW+'mm';section.style.height=(layout.orientation==='portrait'?400:277)+'mm';const heading=doc.createElement('h2');heading.textContent=title;const p=doc.createElement('p');p.className='legend';p.textContent=legend;const c=template.cloneNode(true);c.style.width=layout.mmW+'mm';c.style.height=layout.mmH+'mm';c.querySelectorAll('[id]').forEach(el=>{const old=el.id;el.id=old+'-a3-'+index;c.querySelectorAll('[marker-end]').forEach(line=>{if(line.getAttribute('marker-end')==='url(#'+old+')')line.setAttribute('marker-end','url(#'+el.id+')');});});c.setAttribute('viewBox',[bounds.x,bounds.y,bounds.w,bounds.h].join(' '));c.setAttribute('preserveAspectRatio','xMidYMid meet');section.append(heading,p,c);doc.body.append(section);};
+ page(printMapBounds(snapshot.nodes),snapshot.name+'｜全体図','配置を確認する全体図。続く拡大図は元の配置・線を維持しています。',0);
+ layout.tiles.forEach((t,i)=>page(t,snapshot.name+'｜拡大図 '+(i+1)+' / '+layout.tiles.length,'上から'+t.row+'行目・左から'+t.col+'列目（全'+t.rows+'行×'+t.cols+'列）。隣接ページには重なりがあります。',i+1));printWhenReady(win);
+};
+a4TextButton.onclick=()=>{if(!a3Snapshot)return;const win=pdfWindow(a3Snapshot.name+'｜A4文章','A4 portrait');if(!win)return;const doc=win.document,notes=doc.createElement('div');notes.className='notes';doc.body.append(notes);const title=doc.createElement('h1');title.textContent=a3Snapshot.name;notes.append(title);
+ // Preserve existing note content, order, line breaks and image sizing.
+ a3Snapshot.nodes.forEach(n=>{let h=doc.createElement('h3'),p=doc.createElement('p');h.textContent=n.title;p.textContent=[n.date,n.note,n.url].filter(Boolean).join('\n');p.style.whiteSpace='pre-wrap';notes.append(h,p);if(n.photo){let im=doc.createElement('img');im.src=n.photo;im.style.maxWidth='200px';notes.append(im)}});printWhenReady(win);
+};
+
+</script>
+<script src="./academia-notebook.js"></script>
+</html>
