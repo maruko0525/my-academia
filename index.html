@@ -5,7 +5,7 @@ body{background:radial-gradient(ellipse at 100% 0%,#c6e3ed88,transparent 52%),li
 </style><header><button id="back" hidden>‹ 一覧</button><h1>MY <span style="color:#2177b8">A</span>CADEM<span style="color:#c29136">I</span>A</h1><span class="spacer"></span><small id="status">自分の考えを、自分の配置で。</small><button id="backup">保存書出</button><button id="restore">復元</button><input type="file" id="import" accept="application/json" hidden></header>
 <main id="home"><span class="tag">YOUR CONNECTIONS, YOUR WAY</span><h2>何を整理しよう？</h2><p style="color:#647870;line-height:1.8">サンプルを書き換えて始められます。<br>位置も、順序も、つながりも、あとから自由に。</p><div id="templates"></div><h3 style="margin-top:32px">マイマップ</h3><div id="maps"></div><p><small>この端末のブラウザに自動保存。大切な記録は「保存書出」でバックアップしてください。</small></p></main>
 <section id="editor"><div id="bar"><button id="add" class="primary">＋ 項目</button><button id="edit">編集</button><button id="connect">つなぐ</button><button id="undo">↶</button><button id="redo">↷</button><button id="search">検索</button><button id="time">時系列</button><button id="fit">全体</button><button id="out">−</button><button id="in">＋</button><button id="print">PDF</button></div><details id="readPanel" hidden><summary><span id="readTitle"></span><span>内容を見る</span></summary><div id="readBody"><p id="readMeta"></p><p id="readNote"></p><a id="readLink" target="_blank" rel="noopener noreferrer" hidden></a><img id="readPhoto" hidden alt="登録した画像"><div id="readTools"><button id="studyNotebook" class="primary">📖 学習ノート</button><button id="readEdit">編集する</button><button id="readClose">閉じる</button></div></div></details><svg id="canvas"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#648b80"/></marker></defs><g id="world"></g></svg><div id="timeline"></div><div class="hint" id="hint">タップで内容を見る・ドラッグで移動／背景を動かして移動</div></section>
-<dialog id="nodeDialog"><h3>項目を編集</h3><label>名前</label><input id="titleInput"><label>種類</label><select id="kind"><option>項目</option><option>人物</option><option>出来事</option><option>財産</option><option>組織</option><option>技能</option><option>疑問</option></select><label>メモ</label><textarea id="note"></textarea><label>URL</label><input id="url" type="url" placeholder="https://"><button id="openUrl" style="margin-top:6px">登録したURLを開く</button><label>日付（時系列で使う・任意）</label><input id="date" type="date"><label>色</label><input id="color" type="color"><label>写真・画像</label><input id="photo" type="file" accept="image/*"><img id="photoPreview"><button id="removePhoto">画像を外す</button><div class="actions"><button id="deleteNode">削除</button><button onclick="nodeDialog.close()">取消</button><button id="saveNode" class="primary">保存</button></div></dialog>
+<dialog id="nodeDialog"><h3>項目を編集</h3><label>名前</label><input id="titleInput"><label>種類</label><select id="kind"><option>項目</option><option>章</option><option>人物</option><option>出来事</option><option>財産</option><option>組織</option><option>技能</option><option>疑問</option></select><label>メモ</label><textarea id="note"></textarea><label>URL</label><input id="url" type="url" placeholder="https://"><button id="openUrl" style="margin-top:6px">登録したURLを開く</button><label>日付（時系列で使う・任意）</label><input id="date" type="date"><label>色</label><input id="color" type="color"><label>写真・画像</label><input id="photo" type="file" accept="image/*"><img id="photoPreview"><button id="removePhoto">画像を外す</button><div class="actions"><button id="deleteNode">削除</button><button onclick="nodeDialog.close()">取消</button><button id="saveNode" class="primary">保存</button></div></dialog>
 <dialog id="edgeDialog"><h3>つながりを編集</h3><label>接続元</label><select id="from"></select><label>接続先</label><select id="to"></select><label>関係名（任意）</label><input id="relation" placeholder="所属・親子・原因など"><label><input id="direction" type="checkbox" style="width:auto"> 方向を矢印で表示</label><div class="actions"><button id="deleteEdge">線を外す</button><button onclick="edgeDialog.close()">取消</button><button id="saveEdge" class="primary">保存</button></div></dialog>
 <dialog id="searchDialog"><h3>必要な情報を探す</h3><input id="query" placeholder="名前・メモ・種類を検索"><div id="results"></div><div class="actions"><button onclick="searchDialog.close()">閉じる</button></div></dialog><script>
 const $=id=>document.getElementById(id), uid=()=>crypto.randomUUID(), clone=x=>JSON.parse(JSON.stringify(x));
@@ -16,25 +16,25 @@ function checkpoint(){history.push(clone(map));if(history.length>60)history.shif
 function commit(){map.updated=Date.now();persist();draw()}
 function home(){hideRead();map=null;syncBackupLabels();$('home').style.display='block';$('editor').style.display='none';$('back').hidden=true;$('status').textContent='自分の考えを、自分の配置で。';$('maps').replaceChildren();db.maps.forEach(m=>{let d=document.createElement('div');d.className='mapcard';let b=document.createElement('button');b.textContent=m.name+'　'+m.nodes.length+'項目';b.onclick=()=>openMap(m);let del=document.createElement('button');del.textContent='削除';del.onclick=()=>{if(confirm('このマップを削除しますか？バックアップは保存書出から作れます。')){db.maps=db.maps.filter(x=>x.id!==m.id);persist();home()}};d.append(b,del);$('maps').append(d)})}
 presets.forEach((p,i)=>{let b=document.createElement('button');b.className='card';let title=document.createElement('b');title.textContent=p[0];let desc=document.createElement('p');desc.textContent=p[1];b.append(title,desc);b.onclick=()=>{let name=prompt('マップの名前',p[0]);if(!name)return;let ns=p.slice(2).map((t,j)=>({id:uid(),title:t,note:j===0?'名前や内容を編集して、自分の記録に変えてください。':'',kind:'項目',url:'',date:'',color:j===0?'#d1ede2':'#ffffff',x:[0,-190,190,0][j],y:[0,150,150,300][j]}));let m={id:uid(),name,nodes:ns,edges:ns.slice(1).map(n=>({id:uid(),from:ns[0].id,to:n.id,label:'',directed:false})),updated:Date.now()};db.maps.push(m);persist();openMap(m)};$('templates').append(b)});
-function openMap(m){hideRead();map=m;syncBackupLabels();selected=null;history=[];future=[];linkStart=null;timeline=false;$('home').style.display='none';$('editor').style.display='block';$('back').hidden=false;$('timeline').style.display='none';$('canvas').style.display='block';$('hint').style.display='block';$('time').textContent='時系列';$('status').textContent='端末に保存済み';requestAnimationFrame(fit)}
+function openMap(m){hideRead();chapterView={mode:"full",chapterId:null};map=m;syncBackupLabels();selected=null;history=[];future=[];linkStart=null;timeline=false;$('home').style.display='none';$('editor').style.display='block';$('back').hidden=false;$('timeline').style.display='none';$('canvas').style.display='block';$('hint').style.display='block';$('time').textContent='時系列';$('status').textContent='端末に保存済み';requestAnimationFrame(fit)}
 function svg(tag,attrs={},txt){let e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(let k in attrs)e.setAttribute(k,attrs[k]);if(txt!==undefined)e.textContent=txt;return e}
-function draw(){if(!map)return;let w=$('world');w.replaceChildren();w.setAttribute('transform',`translate(${view.x} ${view.y}) scale(${view.s})`);map.edges.forEach(e=>{let a=map.nodes.find(n=>n.id===e.from),b=map.nodes.find(n=>n.id===e.to);if(!a||!b)return;let g=svg('g',{class:'edge'}),attrs={x1:a.x,y1:a.y,x2:b.x,y2:b.y};g.append(svg('line',{...attrs,class:'hit'}),svg('line',{...attrs,stroke:'#8aa89c','stroke-width':2,...(e.directed?{'marker-end':'url(#arrow)'}:{})}));if(e.label){let t=svg('text',{x:(a.x+b.x)/2,y:(a.y+b.y)/2-9,'text-anchor':'middle',fill:'#486b5f','font-size':12,'paint-order':'stroke',stroke:'#f4f6f4','stroke-width':5},e.label);g.append(t)}g.onclick=()=>editEdge(e);w.append(g)});map.nodes.forEach(n=>{let g=svg('g',{class:'node'+(selected===n.id?' selected':''),transform:`translate(${n.x} ${n.y})`,'data-id':n.id});g.append(svg('rect',{x:-76,y:-25,width:152,height:50,rx:12,fill:n.color||'#fff'}));g.append(svg('text',{'text-anchor':'middle',y:n.photo?-1:5,'font-size':14,fill:'#263e43'},n.title.length>11?n.title.slice(0,11)+'…':n.title));if(n.note||n.url||n.date||n.photo)g.append(svg('text',{'text-anchor':'middle',y:19,'font-size':9,fill:'#62786e'},[n.note?'メモ':'',n.url?'URL':'',n.date,n.photo?'画像':''].filter(Boolean).join(' · ')));g.ondblclick=()=>editNode(n);w.append(g)});$('undo').disabled=!history.length;$('redo').disabled=!future.length;if(timeline)renderTimeline();refreshRead()}
-function fit(){let c=$('canvas');let ns=map.nodes;if(!ns.length){view={x:c.clientWidth/2,y:c.clientHeight/2,s:1};draw();return}let xs=ns.map(n=>n.x),ys=ns.map(n=>n.y),minX=Math.min(...xs)-100,maxX=Math.max(...xs)+100,minY=Math.min(...ys)-70,maxY=Math.max(...ys)+70;let s=Math.min(1.2,(c.clientWidth-30)/(maxX-minX),(c.clientHeight-80)/(maxY-minY));view={s,x:c.clientWidth/2-(minX+maxX)/2*s,y:c.clientHeight/2-(minY+maxY)/2*s};draw()}
+function draw(){if(!map)return;syncChapterControls();const display=getChapterDisplay(map);let w=$('world');w.replaceChildren();w.setAttribute('transform',`translate(${view.x} ${view.y}) scale(${view.s})`);display.edges.forEach(e=>{let a=display.nodes.find(n=>n.id===e.from),b=display.nodes.find(n=>n.id===e.to);if(!a||!b)return;let g=svg('g',{class:'edge'}),attrs={x1:a.x,y1:a.y,x2:b.x,y2:b.y};g.append(svg('line',{...attrs,class:'hit'}),svg('line',{...attrs,stroke:'#8aa89c','stroke-width':2,...(e.directed?{'marker-end':'url(#arrow)'}:{})}));if(e.label){let t=svg('text',{x:(a.x+b.x)/2,y:(a.y+b.y)/2-9,'text-anchor':'middle',fill:'#486b5f','font-size':12,'paint-order':'stroke',stroke:'#f4f6f4','stroke-width':5},e.label);g.append(t)}g.onclick=()=>{if(!e.overviewOnly)editEdge(e)};w.append(g)});display.nodes.forEach(n=>{let g=svg('g',{class:'node'+(selected===n.id?' selected':''),transform:`translate(${n.x} ${n.y})`,'data-id':n.id});g.append(svg('rect',{x:-76,y:-25,width:152,height:50,rx:12,fill:n.color||'#fff'}));g.append(svg('text',{'text-anchor':'middle',y:n.photo?-1:5,'font-size':14,fill:'#263e43'},n.title.length>11?n.title.slice(0,11)+'…':n.title));if(n.note||n.url||n.date||n.photo)g.append(svg('text',{'text-anchor':'middle',y:19,'font-size':9,fill:'#62786e'},[n.note?'メモ':'',n.url?'URL':'',n.date,n.photo?'画像':''].filter(Boolean).join(' · ')));g.ondblclick=()=>editNode(map.nodes.find(item=>item.id===n.id));w.append(g)});$('undo').disabled=!history.length;$('redo').disabled=!future.length;if(timeline)renderTimeline();refreshRead()}
+function fit(){let c=$('canvas');let ns=getChapterDisplay(map).nodes;if(!ns.length){view={x:c.clientWidth/2,y:c.clientHeight/2,s:1};draw();return}let xs=ns.map(n=>n.x),ys=ns.map(n=>n.y),minX=Math.min(...xs)-100,maxX=Math.max(...xs)+100,minY=Math.min(...ys)-70,maxY=Math.max(...ys)+70;let s=Math.min(1.2,(c.clientWidth-30)/(maxX-minX),(c.clientHeight-80)/(maxY-minY));view={s,x:c.clientWidth/2-(minX+maxX)/2*s,y:c.clientHeight/2-(minY+maxY)/2*s};draw()}
 function editNode(n){nodeEdit=n.id;photoData=n.photo||'';for(let [id,key] of [['titleInput','title'],['kind','kind'],['note','note'],['url','url'],['date','date'],['color','color']])$(id).value=n[key]|| (key==='color'?'#ffffff':'');$('photo').value='';$('photoPreview').src=photoData;$('photoPreview').hidden=!photoData;$('nodeDialog').showModal()}
 $('saveNode').onclick=()=>{if(!$('titleInput').value.trim())return;checkpoint();let n=map.nodes.find(n=>n.id===nodeEdit);for(let [id,key] of [['titleInput','title'],['kind','kind'],['note','note'],['url','url'],['date','date'],['color','color']])n[key]=$(id).value;n.photo=photoData;$('nodeDialog').close();commit()};$('removePhoto').onclick=()=>{photoData='';$('photoPreview').hidden=true};$('photo').onchange=async()=>{let f=$('photo').files[0];if(!f)return;let bmp=await createImageBitmap(f);let c=document.createElement('canvas'),s=Math.min(1,900/Math.max(bmp.width,bmp.height));c.width=bmp.width*s;c.height=bmp.height*s;c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);photoData=c.toDataURL('image/jpeg',.8);$('photoPreview').src=photoData;$('photoPreview').hidden=false};$('openUrl').onclick=()=>{try{let u=new URL($('url').value);if(['https:','http:'].includes(u.protocol))window.open(u.href,'_blank','noopener')}catch{alert('https:// から始まるURLを入力してください')}};
 $('deleteNode').onclick=()=>{if(!confirm('項目と添付情報を削除しますか？取り消しで戻せます。'))return;checkpoint();map.nodes=map.nodes.filter(n=>n.id!==nodeEdit);map.edges=map.edges.filter(e=>e.from!==nodeEdit&&e.to!==nodeEdit);selected=null;$('nodeDialog').close();commit()};
 function editEdge(e){edgeEdit=e?.id||null;for(let id of ['from','to']){$(id).replaceChildren();map.nodes.forEach(n=>{let o=document.createElement('option');o.value=n.id;o.textContent=n.title;$(id).append(o)})} $('from').value=e?.from||linkStart||selected||map.nodes[0]?.id;$('to').value=e?.to||map.nodes.find(n=>n.id!==$('from').value)?.id;$('relation').value=e?.label||'';$('direction').checked=e?.directed||false;$('deleteEdge').hidden=!e;$('edgeDialog').showModal()}
 $('saveEdge').onclick=()=>{if($('from').value===$('to').value){alert('別の項目を選んでください');return}checkpoint();let e=edgeEdit?map.edges.find(e=>e.id===edgeEdit):{id:uid()};Object.assign(e,{from:$('from').value,to:$('to').value,label:$('relation').value,directed:$('direction').checked});if(!edgeEdit)map.edges.push(e);linkStart=null;$('connect').textContent='つなぐ';$('edgeDialog').close();commit()};$('deleteEdge').onclick=()=>{checkpoint();map.edges=map.edges.filter(e=>e.id!==edgeEdit);$('edgeDialog').close();commit()};
-$('add').onclick=()=>{let title=prompt('新しい項目の名前');if(!title?.trim())return;checkpoint();let parent=map.nodes.find(n=>n.id===selected),n={id:uid(),title:title.trim(),note:'',kind:'項目',url:'',date:'',color:'#ffffff',x:parent?parent.x+190:($('canvas').clientWidth/2-view.x)/view.s,y:parent?parent.y+120:($('canvas').clientHeight/2-view.y)/view.s};map.nodes.push(n);if(parent)map.edges.push({id:uid(),from:parent.id,to:n.id,label:'',directed:false});selected=n.id;commit()};$('edit').onclick=()=>{let n=map.nodes.find(n=>n.id===selected);if(n)editNode(n);else alert('編集する項目をタップしてください')};$('connect').onclick=()=>{if(map.nodes.length<2)return alert('項目を2つ以上作ってください');editEdge(null)};
+$('add').onclick=()=>{if(chapterView.mode==='chapters')setChapterView('full');if(chapterView.mode==='chapter'&&!selected)selected=chapterView.chapterId;let title=prompt('新しい項目の名前');if(!title?.trim())return;checkpoint();let parent=map.nodes.find(n=>n.id===selected),n={id:uid(),title:title.trim(),note:'',kind:'項目',url:'',date:'',color:'#ffffff',x:parent?parent.x+190:($('canvas').clientWidth/2-view.x)/view.s,y:parent?parent.y+120:($('canvas').clientHeight/2-view.y)/view.s};map.nodes.push(n);if(parent)map.edges.push({id:uid(),from:parent.id,to:n.id,label:'',directed:false});selected=n.id;commit()};$('edit').onclick=()=>{let n=map.nodes.find(n=>n.id===selected);if(n)editNode(n);else alert('編集する項目をタップしてください')};$('connect').onclick=()=>{if(map.nodes.length<2)return alert('項目を2つ以上作ってください');editEdge(null)};
 function replaceSnapshot(s){let idx=db.maps.findIndex(m=>m.id===map.id);map=s;db.maps[idx]=map;selected=null;persist();draw()}
 $('undo').onclick=()=>{if(history.length){future.push(clone(map));replaceSnapshot(history.pop())}};$('redo').onclick=()=>{if(future.length){history.push(clone(map));replaceSnapshot(future.pop())}};
 let pointers=new Map(),drag=null,pinch=null;
-$('canvas').onpointerdown=e=>{if(e.target.closest('.edge'))return;$('canvas').setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){if(drag?.changed)commit();drag=null;let a=[...pointers.values()];pinch={d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),s:view.s};return}let id=e.target.closest('.node')?.getAttribute('data-id');drag={id,x:e.clientX,y:e.clientY,ox:view.x,oy:view.y,changed:false};if(id){selected=id;let n=map.nodes.find(n=>n.id===id);drag.nx=n.x;drag.ny=n.y;draw()}else{selected=null;hideRead();draw()}};
-$('canvas').onpointermove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2&&pinch){let a=[...pointers.values()],s=Math.max(.2,Math.min(3,pinch.s*Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)/pinch.d));zoom(s/view.s);return}if(!drag)return;let dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)<4)return;if(drag.id){if(!drag.changed)checkpoint();let n=map.nodes.find(n=>n.id===drag.id);n.x=drag.nx+dx/view.s;n.y=drag.ny+dy/view.s;drag.changed=true}else{view.x=drag.ox+dx;view.y=drag.oy+dy}draw()};
-function release(e){let tapped=drag?.id&&!drag.changed&&e.type==='pointerup'?map.nodes.find(n=>n.id===drag.id):null;pointers.delete(e.pointerId);if(drag?.changed)commit();drag=null;if(pointers.size<2)pinch=null;if(tapped)showRead(tapped)} $('canvas').onpointerup=release;$('canvas').onpointercancel=release;
+$('canvas').onpointerdown=e=>{if(e.target.closest('.edge'))return;$('canvas').setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){if(drag?.changed&&chapterView.mode!=="chapters")commit();drag=null;let a=[...pointers.values()];pinch={d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),s:view.s};return}let id=e.target.closest('.node')?.getAttribute('data-id');drag={id,x:e.clientX,y:e.clientY,ox:view.x,oy:view.y,changed:false};if(id){selected=id;let n=map.nodes.find(n=>n.id===id);drag.nx=n.x;drag.ny=n.y;draw()}else{selected=null;hideRead();draw()}};
+$('canvas').onpointermove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2&&pinch){let a=[...pointers.values()],s=Math.max(.2,Math.min(3,pinch.s*Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)/pinch.d));zoom(s/view.s);return}if(!drag)return;let dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)<4)return;if(drag.id&&chapterView.mode==="chapters"){drag.changed=true;return}if(drag.id){if(!drag.changed)checkpoint();let n=map.nodes.find(n=>n.id===drag.id);n.x=drag.nx+dx/view.s;n.y=drag.ny+dy/view.s;drag.changed=true}else{view.x=drag.ox+dx;view.y=drag.oy+dy}draw()};
+function release(e){let tapped=drag?.id&&!drag.changed&&e.type==='pointerup'?map.nodes.find(n=>n.id===drag.id):null;pointers.delete(e.pointerId);if(drag?.changed&&chapterView.mode!=="chapters")commit();drag=null;if(pointers.size<2)pinch=null;if(tapped){if(chapterView.mode==="chapters"&&chapterIds(map).includes(tapped.id))setChapterView("chapter",tapped.id);else showRead(tapped)}} $('canvas').onpointerup=release;$('canvas').onpointercancel=release;
 function zoom(f){let c=$('canvas'),s=Math.max(.2,Math.min(3,view.s*f)),cx=c.clientWidth/2,cy=c.clientHeight/2;view.x=cx-(cx-view.x)*s/view.s;view.y=cy-(cy-view.y)*s/view.s;view.s=s;draw()}$('canvas').onwheel=e=>{e.preventDefault();zoom(e.deltaY>0?.9:1.1)};$('in').onclick=()=>zoom(1.2);$('out').onclick=()=>zoom(1/1.2);$('fit').onclick=fit;$('back').onclick=home;
-$('search').onclick=()=>{$('query').value='';$('results').replaceChildren();$('searchDialog').showModal()};$('query').oninput=()=>{$('results').replaceChildren();let q=$('query').value.trim().toLowerCase();if(!q)return;map.nodes.filter(n=>[n.title,n.note,n.kind,n.url].join(' ').toLowerCase().includes(q)).forEach(n=>{let b=document.createElement('button');b.textContent=n.title;b.onclick=()=>{if(timeline)$('time').click();selected=n.id;view.x=$('canvas').clientWidth/2-n.x*view.s;view.y=$('canvas').clientHeight/2-n.y*view.s;draw();showRead(n);$('searchDialog').close()};$('results').append(b)})};
-function renderTimeline(){let t=$('timeline');t.replaceChildren();let intro=document.createElement('p');intro.textContent='自分で登録した日付順に表示。マップの位置やつながりは変わりません。';t.append(intro);let dated=map.nodes.filter(n=>n.date).slice().sort((a,b)=>a.date.localeCompare(b.date));let undated=map.nodes.filter(n=>!n.date);[...dated,...undated].forEach(n=>{let d=document.createElement('div');d.className='event';let s=document.createElement('small');s.textContent=n.date||'日付なし';let h=document.createElement('h3');h.textContent=n.title;let p=document.createElement('p');p.textContent=n.note;d.append(s,h,p);d.onclick=()=>{selected=n.id;showRead(n);};t.append(d)})}
+$('search').onclick=()=>{$('query').value='';$('results').replaceChildren();$('searchDialog').showModal()};$('query').oninput=()=>{$('results').replaceChildren();let q=$('query').value.trim().toLowerCase();if(!q)return;map.nodes.filter(n=>[n.title,n.note,n.kind,n.url].join(' ').toLowerCase().includes(q)).forEach(n=>{let b=document.createElement('button');b.textContent=n.title;b.onclick=()=>{if(timeline)$('time').click();if(!getChapterDisplay(map).nodes.some(item=>item.id===n.id)||chapterView.mode==='chapters')setChapterView('full');selected=n.id;view.x=$('canvas').clientWidth/2-n.x*view.s;view.y=$('canvas').clientHeight/2-n.y*view.s;draw();showRead(n);$('searchDialog').close()};$('results').append(b)})};
+function renderTimeline(){let t=$('timeline');t.replaceChildren();let intro=document.createElement('p');intro.textContent='自分で登録した日付順に表示。マップの位置やつながりは変わりません。';t.append(intro);let dated=getChapterDisplay(map).nodes.filter(n=>n.date).slice().sort((a,b)=>a.date.localeCompare(b.date));let undated=getChapterDisplay(map).nodes.filter(n=>!n.date);[...dated,...undated].forEach(n=>{let d=document.createElement('div');d.className='event';let s=document.createElement('small');s.textContent=n.date||'日付なし';let h=document.createElement('h3');h.textContent=n.title;let p=document.createElement('p');p.textContent=n.note;d.append(s,h,p);d.onclick=()=>{selected=n.id;showRead(n);};t.append(d)})}
 $('time').onclick=()=>{timeline=!timeline;$('canvas').style.display=timeline?'none':'block';$('timeline').style.display=timeline?'block':'none';$('hint').style.display=timeline?'none':'block';$('time').textContent=timeline?'マップへ':'時系列';draw()};
 function download(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),10000)}
 function syncBackupLabels(){$('backup').textContent=map?'このマップを書出':'全体バックアップ';$('restore').textContent='読み込み';}
@@ -417,16 +417,127 @@ async function printWhenReady(win){await Promise.all([...win.document.images].ma
 a3MapButton.onclick=()=>{
  if(!a3Snapshot)return;const layout=selectedA3(),snapshot=a3Snapshot;
  const win=pdfWindow(snapshot.name+'｜A3マップ','A3 '+layout.orientation);if(!win)return;const doc=win.document;
- const template=$('canvas').cloneNode(true);template.style.cssText='';template.removeAttribute('id');template.querySelector('#world').removeAttribute('transform');template.querySelectorAll('.selected').forEach(g=>g.classList.remove('selected'));
+ const template=chapterPrintSVG(snapshot);
  template.querySelectorAll('.node').forEach(g=>{const n=snapshot.nodes.find(n=>n.id===g.getAttribute('data-id'));if(!n)return;g.querySelectorAll('text').forEach(t=>t.remove());const chars=Array.from(n.title),chunks=[];for(let i=0;i<chars.length;i+=12)chunks.push(chars.slice(i,i+12).join(''));const size=Math.min(12,40/Math.max(1,chunks.length));chunks.forEach((line,i)=>g.append(svg('text',{'text-anchor':'middle',y:(i-(chunks.length-1)/2)*size+size*.35,'font-size':size,fill:'#263e43'},line)));});
  const page=(bounds,title,legend,index)=>{const section=doc.createElement('section');section.className='map-page';section.style.width=layout.mmW+'mm';section.style.height=(layout.orientation==='portrait'?400:277)+'mm';const heading=doc.createElement('h2');heading.textContent=title;const p=doc.createElement('p');p.className='legend';p.textContent=legend;const c=template.cloneNode(true);c.style.width=layout.mmW+'mm';c.style.height=layout.mmH+'mm';c.querySelectorAll('[id]').forEach(el=>{const old=el.id;el.id=old+'-a3-'+index;c.querySelectorAll('[marker-end]').forEach(line=>{if(line.getAttribute('marker-end')==='url(#'+old+')')line.setAttribute('marker-end','url(#'+el.id+')');});});c.setAttribute('viewBox',[bounds.x,bounds.y,bounds.w,bounds.h].join(' '));c.setAttribute('preserveAspectRatio','xMidYMid meet');section.append(heading,p,c);doc.body.append(section);};
- page(printMapBounds(snapshot.nodes),snapshot.name+'｜全体図','配置を確認する全体図。続く拡大図は元の配置・線を維持しています。',0);
- layout.tiles.forEach((t,i)=>page(t,snapshot.name+'｜拡大図 '+(i+1)+' / '+layout.tiles.length,'上から'+t.row+'行目・左から'+t.col+'列目（全'+t.rows+'行×'+t.cols+'列）。隣接ページには重なりがあります。',i+1));printWhenReady(win);
+ page(printMapBounds(snapshot.nodes),snapshot.name+'｜全体図',layout.tiles.length===1?'選択した範囲のマップ全体です。':'配置を確認する全体図。続く拡大図は元の配置・線を維持しています。',0);
+ if(layout.tiles.length>1)layout.tiles.forEach((t,i)=>page(t,snapshot.name+'｜拡大図 '+(i+1)+' / '+layout.tiles.length,'上から'+t.row+'行目・左から'+t.col+'列目（全'+t.rows+'行×'+t.cols+'列）。隣接ページには重なりがあります。',i+1));printWhenReady(win);
 };
 a4TextButton.onclick=()=>{if(!a3Snapshot)return;const win=pdfWindow(a3Snapshot.name+'｜A4文章','A4 portrait');if(!win)return;const doc=win.document,notes=doc.createElement('div');notes.className='notes';doc.body.append(notes);const title=doc.createElement('h1');title.textContent=a3Snapshot.name;notes.append(title);
  // Preserve existing note content, order, line breaks and image sizing.
  a3Snapshot.nodes.forEach(n=>{let h=doc.createElement('h3'),p=doc.createElement('p');h.textContent=n.title;p.textContent=[n.date,n.note,n.url].filter(Boolean).join('\n');p.style.whiteSpace='pre-wrap';notes.append(h,p);if(n.photo){let im=doc.createElement('img');im.src=n.photo;im.style.maxWidth='200px';notes.append(im)}});printWhenReady(win);
 };
+
+</script>
+<script>
+/* Chapter scopes are projections. This module never writes positions or edges. */
+let chapterView={mode:'full',chapterId:null};
+function chapterStructure(source){
+ const nodes=new Map(source.nodes.map(n=>[n.id,n])),out=new Map(),incoming=new Set();
+ source.edges.forEach(e=>{if(nodes.has(e.from)&&nodes.has(e.to)&&e.from!==e.to){if(!out.has(e.from))out.set(e.from,[]);out.get(e.from).push(e.to);incoming.add(e.to);}});
+ const roots=source.nodes.filter(n=>!incoming.has(n.id));
+ const root=roots[0]||source.nodes[0];
+ let chapters=source.nodes.filter(n=>n.kind==='章');
+ // Explicit chapter markers win; older maps can use numbered chapter titles.
+ if(!chapters.length)chapters=source.nodes.filter(n=>/^(?:★|☆|\s)*(?:第[0-9０-９一二三四五六七八九十百]+章|[0-9０-９]{1,3}[ .．、　])/.test(n.title||''));
+ if(!chapters.length&&root)chapters=(out.get(root.id)||[]).map(id=>nodes.get(id));
+ chapters=chapters.slice().sort((a,b)=>(a.y-b.y)||(a.x-b.x));
+ const chapterSet=new Set(chapters.map(n=>n.id)),rootSet=new Set(roots.map(n=>n.id));
+ if(root&&!chapterSet.has(root.id))rootSet.add(root.id);
+ // A shared item may belong to several chapters. Another chapter and a map root
+ // are boundaries, so a cross-reference cannot pull the other chapter into view.
+ function descendants(id){const seen=new Set(),queue=[id];for(let i=0;i<queue.length;i++){const next=queue[i];if(seen.has(next))continue;seen.add(next);for(const child of out.get(next)||[]){if(child===id||(!chapterSet.has(child)&&!rootSet.has(child)))queue.push(child);}}return seen;}
+ return {nodes,out,roots,root,chapters,chapterSet,descendants};
+}
+function chapterIds(source){return chapterStructure(source).chapters.map(n=>n.id);}
+function getChapterDisplay(source,state=chapterView){
+ if(state.mode==='full')return source;
+ const info=chapterStructure(source);
+ if(state.mode==='chapter'){
+  if(!info.chapterSet.has(state.chapterId))return source;
+  const ids=info.descendants(state.chapterId);
+  return {...source,name:source.name+'｜'+info.nodes.get(state.chapterId).title,nodes:source.nodes.filter(n=>ids.has(n.id)),edges:source.edges.filter(e=>ids.has(e.from)&&ids.has(e.to))};
+ }
+ if(!info.chapters.length)return {...source,nodes:[],edges:[]};
+ // Compact overview: display coordinates only. Original coordinates are untouched.
+ const roots=info.roots.filter(n=>!info.chapterSet.has(n.id));
+ if(!roots.length&&info.root&&!info.chapterSet.has(info.root.id))roots.push(info.root);
+ const displayed=[...roots.map((n,i)=>({...n,x:(i-(roots.length-1)/2)*190,y:0})),...info.chapters.map((n,i)=>({...n,x:info.chapters.length===1?0:(i%2?88:-88),y:(roots.length?100:0)+Math.floor(i/2)*90}))];
+ const ids=new Set(displayed.map(n=>n.id));
+ const edges=source.edges.filter(e=>ids.has(e.from)&&ids.has(e.to)).map(e=>({...e,overviewOnly:true}));
+ // Connect a root to a chapter even when intermediate headings are collapsed.
+ for(const root of roots){const queue=[root.id],seen=new Set();for(let i=0;i<queue.length;i++){const id=queue[i];if(seen.has(id))continue;seen.add(id);for(const child of info.out.get(id)||[]){if(info.chapterSet.has(child)){if(!edges.some(e=>e.from===root.id&&e.to===child))edges.push({id:'overview-'+root.id+'-'+child,from:root.id,to:child,label:'',overviewOnly:true});}else queue.push(child);}}}
+ return {...source,name:source.name+'｜章まで',nodes:displayed,edges};
+}
+const chapterStyle=document.createElement('style');chapterStyle.textContent=`
+#chapterBar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#f4f8fb;border-bottom:1px solid #ccdce6;min-height:49px;height:49px}
+#chapterBar label{margin:0;font-size:12px;white-space:nowrap}#chapterBar select{width:auto;min-width:0;padding:7px;font-size:13px;max-width:45vw;height:32px}#chapterChoice{flex:1}#chapterBar button{padding:7px 10px;font-size:12px;white-space:nowrap}#chapterBar span{font-size:12px;color:#587488}
+#bar{scrollbar-width:none;overflow-y:hidden}#bar::-webkit-scrollbar{display:none}
+#canvas{height:calc(100dvh - 177px)}#readPanel{top:121px}#timeline{max-height:calc(100dvh - 177px)}
+@media(max-width:550px){header{gap:6px}header button{white-space:nowrap;font-size:11px;padding:8px}header h1{font-size:12px;white-space:nowrap;gap:6px}header h1:before{width:22px;height:22px}header .spacer{min-width:0}#chapterBar{gap:5px;padding:7px}#chapterBar label{display:none}#chapterBar select{max-width:44vw}#chapterHelp{display:none}}`;
+document.head.append(chapterStyle);
+const chapterBar=document.createElement('div');chapterBar.id='chapterBar';
+chapterBar.innerHTML='<label for="chapterMode">表示範囲</label><select id="chapterMode" aria-label="マップの表示範囲"><option value="full">全項目</option><option value="chapters">章まで</option><option value="chapter">選んだ章</option></select><select id="chapterChoice" aria-label="表示する章"></select><button id="chapterBack">章一覧へ</button><span id="chapterHelp"></span>';
+$('bar').after(chapterBar);
+let chapterControlKey='';
+function syncChapterControls(){
+ if(!map)return;
+ const info=chapterStructure(map),key=JSON.stringify([map.id,info.chapters.map(n=>[n.id,n.title])]);
+ if(chapterControlKey!==key){$('chapterChoice').replaceChildren();info.chapters.forEach(n=>{let o=document.createElement('option');o.value=n.id;o.textContent=n.title;$('chapterChoice').append(o);});chapterControlKey=key;}
+ if(chapterView.mode==='chapter'&&!info.chapterSet.has(chapterView.chapterId))chapterView={mode:'chapters',chapterId:null};
+ $('chapterMode').value=chapterView.mode;
+ $('chapterMode').options[2].disabled=!info.chapters.length;
+ $('chapterChoice').hidden=chapterView.mode!=='chapter';
+ if(chapterView.chapterId)$('chapterChoice').value=chapterView.chapterId;
+ $('chapterBack').hidden=chapterView.mode!=='chapter';
+ $('chapterHelp').textContent=info.chapters.length?(chapterView.mode==='chapters'?'章をタップして開く':''):'編集の「種類」を「章」にすると章として表示できます';
+ $('hint').textContent=chapterView.mode==='chapters'?'章をタップして中の項目へ／背景で移動・ピンチで拡大':'タップで内容を見る・ドラッグで移動／背景を動かして移動';
+}
+function setChapterView(mode,chapterId=null){
+ if(!map)return;
+ chapterView={mode,chapterId:mode==='chapter'?(chapterId||chapterIds(map)[0]||null):null};
+ selected=null;hideRead();if(timeline)$('time').click();syncChapterControls();fit();
+}
+$('chapterMode').onchange=()=>setChapterView($('chapterMode').value);
+$('chapterChoice').onchange=()=>setChapterView('chapter',$('chapterChoice').value);
+$('chapterBack').onclick=()=>setChapterView('chapters');
+// Preserve custom imported kinds when opening the existing editor.
+const chapterEditNode=editNode;
+editNode=function(n){if(![...$('kind').options].some(o=>o.value===n.kind)&&n.kind){const o=document.createElement('option');o.textContent=n.kind;$('kind').append(o);}chapterEditNode(n);};
+function chapterPrintSVG(snapshot){
+ const canvas=svg('svg',{xmlns:'http://www.w3.org/2000/svg'}),defs=svg('defs');
+ const marker=svg('marker',{id:'arrow',markerWidth:8,markerHeight:8,refX:7,refY:4,orient:'auto'});marker.append(svg('path',{d:'M0,0 L8,4 L0,8',fill:'#648b80'}));defs.append(marker);canvas.append(defs);
+ const lookup=new Map(snapshot.nodes.map(n=>[n.id,n]));
+ snapshot.edges.forEach(e=>{const a=lookup.get(e.from),b=lookup.get(e.to);if(!a||!b)return;canvas.append(svg('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:'#8aa89c','stroke-width':2,...(e.directed?{'marker-end':'url(#arrow)'}:{})}));if(e.label)canvas.append(svg('text',{x:(a.x+b.x)/2,y:(a.y+b.y)/2-9,'text-anchor':'middle','font-size':12,fill:'#486b5f'},e.label));});
+ snapshot.nodes.forEach(n=>{const g=svg('g',{class:'node',transform:`translate(${n.x} ${n.y})`,'data-id':n.id});g.append(svg('rect',{x:-76,y:-25,width:152,height:50,rx:12,fill:n.color||'#fff'}));canvas.append(g);});return canvas;
+}
+// The same scope selector controls both A3 maps and A4 notes.
+const pdfScopeLabel=document.createElement('label');pdfScopeLabel.textContent='出力する範囲';pdfScopeLabel.htmlFor='chapterPdfScope';
+const pdfScope=document.createElement('select');pdfScope.id='chapterPdfScope';
+a3Info.after(pdfScopeLabel,pdfScope);
+let chapterPdfSource=null;
+function applyChapterPdfScope(){
+ const value=pdfScope.value;
+ const state=value==='full'||value==='chapters'?{mode:value,chapterId:null}:{mode:'chapter',chapterId:value.slice(8)};
+ a3Snapshot=clone(getChapterDisplay(chapterPdfSource,state));updateA3Info();
+}
+pdfScope.onchange=applyChapterPdfScope;
+$('print').onclick=()=>{
+ if(!map)return;chapterPdfSource=clone(map);pdfScope.replaceChildren();
+ const add=(value,text)=>{const o=document.createElement('option');o.value=value;o.textContent=text;pdfScope.append(o);};
+ add('full','全項目（全体マップ）');add('chapters','章まで（全体構成）');
+ chapterStructure(chapterPdfSource).chapters.forEach(n=>add('chapter:'+n.id,'章：'+n.title));
+ pdfScope.options[1].disabled=!chapterIds(map).length;
+ pdfScope.value=chapterView.mode==='chapter'?'chapter:'+chapterView.chapterId:chapterView.mode;
+ a3Select.value='auto';a3Info.textContent='全項目・章まで・各章を選んで出力できます。マップはA3、文章はA4。向きは自動または手動で選べます。保存データや配置は変わりません。';applyChapterPdfScope();a3Dialog.showModal();
+};
+updateA3Info=function(){
+ if(!a3Snapshot)return;
+ const b=printMapBounds(a3Snapshot.nodes),p=a3Tiles(b,'portrait'),l=a3Tiles(b,'landscape'),chosen=selectedA3();
+ const pages=layout=>layout.tiles.length===1?1:1+layout.tiles.length;
+ a3Count.textContent=a3Snapshot.nodes.length+'項目。A3縦 '+pages(p)+'ページ／A3横 '+pages(l)+'ページ。選択：'+(chosen.orientation==='portrait'?'縦':'横')+' '+pages(chosen)+'ページ（'+(chosen.tiles.length===1?'全体図のみ':'全体図＋拡大図')+'）。';
+};
+a3Select.onchange=()=>updateA3Info();
 
 </script>
 <script src="./academia-notebook.js"></script>
